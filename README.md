@@ -1,56 +1,37 @@
-# parcel-plugin-workbox
+# Parcel Plugin Workbox 3
 
-[![Travis CI badge][travis badge]][travis url]
-[![Greenkeeper badge][greenkeeper badge]][greenkeeper url]
-[![Standard JS badge][standardjs badge]][standardjs url]
-
-A plugin for [Parcel][parcel url] to generate a service worker with [Workbox][workbox url].
+Fork of [parcel-plugin-workbox](https://github.com/dahnielson/parcel-plugin-workbox) by Anders Dahnielson.
 
 ## Install
-
-You can either install by running yarn (recommended)
-
 ```bash
-yarn add parcel-plugin-workbox --dev
-```
-
-or use npm
-
-```bash
-npm install parcel-plugin-workbox --save-dev
+npm i parcel-plugin-workbox3 -D
 ```
 
 ## Usage
-
-When you build resources with Parcel, the plugin will generate a service worker `sw.js` and insert it into your project's `index.html` entry file.
-
+When you build with Parcel, this plugin will automatically run `generateSWString`
 You can customize the settings by adding a `workbox` section to your `package.json`.
-
-```
+The full configuration options can be found [here](https://developers.google.com/web/tools/workbox/modules/workbox-build#generateswstring_mode).
+```JavaScript
 "workbox": {
-  importScripts: ['./worker.js'],           // scripts to import into `sw.js`
-  globDirectory: './dist',                  // directory to cache (usually output dir)
-  globPatterns: [                           // file types to include
-  '**/*.{css,html,gif,js,jpg,png,svg,webp}'
+  "importScripts": [
+    "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js",
+    "./worker.js"
+  ],
+  "globDirectory": "./dist",
+  "globPatterns": [
+    "**/*.{css,html,gif,js,jpg,png,svg,webp}"
+  ]
 }
 ```
+*Note: you must include a workbox source, either a local copy or from a cdn. At least two scripts must be specified (Workbox itself + your service worker).*
 
-Workbox requires at least one import script to be defined. By default, a `worker.js` file, where you can write the logic for your service worker, will be read from your project's root directory and imported into `sw.js` unless you change this setting. Additionally, a CDN version of Google Workbox is imported automatically.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/dahnielson/parcel-plugin-workbox/tags).
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE.md file for details.
-
-[travis badge]: https://travis-ci.com/dahnielson/parcel-plugin-workbox.svg?branch=master
-[travis url]: https://travis-ci.com/dahnielson/parcel-plugin-workbox
-[greenkeeper badge]: https://badges.greenkeeper.io/dahnielson/parcel-plugin-workbox.svg
-[greenkeeper url]: https://greenkeeper.io
-[standardjs badge]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg
-[standardjs url]: https://github.com/standard/standard
-
-[parcel url]: https://parceljs.org
-[workbox url]: https://developers.google.com/web/tools/workbox/
+## FAQ
+* Whats different between this and the original?
+  * Fixed uglify JS
+    * [Fixes parcel-plugin-workbox #19](https://github.com/dahnielson/parcel-plugin-workbox/issues/19)
+  * Improved configuration support
+    * Pass any configuration option you would normally pass to `generateSWString`
+    * Choose workbox source (CDN or Local copy)
+  * Reduced logging
+* Why not `parcel-plugin-workbox2`?
+  * The name was already already taken on [NPM](https://npmjs.com/package/parcel-plugin-workbox2)
