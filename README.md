@@ -14,16 +14,11 @@ The full configuration options can be found [here](https://developers.google.com
 ```JavaScript
 "workbox": {
   "importScripts": [
-    "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js",
     "./worker.js"
   ],
-  "globDirectory": "./dist",
-  "globPatterns": [
-    "**/*.{css,html,gif,js,jpg,png,svg,webp}"
-  ]
 }
 ```
-*Note: you must include a workbox source, either a local copy or from a cdn. At least two scripts must be specified (Workbox itself + your service worker).*
+*Note: you must include at least one script in the `importScripts` property.*
 
 ## FAQ
 * Whats different between this and the original?
@@ -31,7 +26,7 @@ The full configuration options can be found [here](https://developers.google.com
     * [Fixes parcel-plugin-workbox #19](https://github.com/dahnielson/parcel-plugin-workbox/issues/19)
   * Improved configuration support
     * Pass any configuration option you would normally pass to `generateSWString`
-    * Choose workbox source (CDN or Local copy)
+  * Local workbox copy
   * Reduced logging
 * Why not `parcel-plugin-workbox2`?
   * The name was already already taken on [NPM](https://npmjs.com/package/parcel-plugin-workbox2)
