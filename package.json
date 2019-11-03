@@ -2,9 +2,9 @@
   "name": "parcel-plugin-workbox3",
   "version": "1.0.1",
   "description": "Parcel plugin to generate a workbox service worker",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint ."
   },
   "repository": {
     "type": "git",

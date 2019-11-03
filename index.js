@@ -11,16 +11,10 @@ const path = require('path');
 const uglifyJS = require('uglify-js');
 const workbox = require('workbox-build');
 
-//Injection template
-let template = fs.readFileSync('./template.js', 'utf8');
-
 module.exports = bundle => 
 {
   bundle.on('buildEnd', async () => 
   {
-    //Start the logging
-    logger.log('🛠️ Parcel Plugin Workbox 3');
-
     //Parse config
     const mainAsset = bundle.mainAsset || bundle.mainBundle.entryAsset || bundle.mainBundle.childBundles.values().next().value.entryAsset;
     const pkg = typeof mainAsset.getPackage === 'function' ? await mainAsset.getPackage() : mainAsset.package;
@@ -44,8 +38,7 @@ module.exports = bundle =>
     const dest = path.resolve(bundle.options.outDir);
 
     //Add local workbox-sw
-    //config.importScripts.push('https://storage.googleapis.com/workbox-cdn/releases/4.1.1/workbox-sw.js');
-    config.importScripts.push('workbox-sw/index.mjs');
+    config.importScripts.push('node_modules/workbox-sw/index.mjs');
 
     //Import scripts
     for (let i = 0; i < config.importScripts.length; i++) 
@@ -91,10 +84,17 @@ module.exports = bundle =>
       {
         if (!data.includes('serviceWorker.register')) 
         {
-          template = minify(template);
+          let template = minify(`
+          if ('serviceWorker' in navigator)
+          {
+            window.addEventListener('load', function ()
+            {
+              navigator.serviceWorker.register('/sw.js');
+            });
+          }`);
           template = `<script>${template}</script></body>`;
           data = data.replace('</body>', template);
-          writeFileSync(entry, data);
+          fs.writeFileSync(entry, data);
           logger.success(`Service worker injected into ${dest}/index.html`);
         }
       }
