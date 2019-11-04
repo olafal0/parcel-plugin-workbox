@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Cloud-CNC/parcel-plugin-workbox#readme",
   "dependencies": {
+    "parcel-bundler": "^1.12.4",
     "uglify-js": "^3.6.7",
     "workbox-build": "^4.3.1"
   },

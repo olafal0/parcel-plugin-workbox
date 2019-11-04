@@ -5,6 +5,7 @@
  */
 
 //Imports
+const bundler = require('parcel-bundler');
 const fs = require('fs');
 const logger = require('@parcel/logger');
 const path = require('path');
@@ -38,26 +39,19 @@ module.exports = bundle =>
     const dest = path.resolve(bundle.options.outDir);
 
     //Add local workbox-sw
-    config.importScripts.push('node_modules/workbox-sw/index.mjs');
+    //config.importScripts.push('node_modules/workbox-sw/index.mjs');
 
-    //Import scripts
-    for (let i = 0; i < config.importScripts.length; i++) 
-    {
-      let dir = config.importScripts[i];
-      fs.readFile(path.resolve(dir), (err, data) => 
-      {
-        if (err)
-        {
-          logger.error(err);
-        }
-        else
-        {
-          data = minify(data);
-          dir = /[^\/]+$/.exec(dir)[0];
-          fs.writeFileSync(path.resolve(dest, dir), data);
-        }
-      });
-    }
+    //Bundle importScripts
+    const scriptsBundle = new bundler(config.importScripts, {
+      outFile: 'worker.js',
+      watch: false,
+      minify: false,
+      bundleNodeModules: true
+    });
+    scriptsBundle.bundle();
+
+    //Import the bundle instead of the scripts
+    config.importScripts = ['./worker.js'];
 
     //Generate service worker
     workbox.generateSWString(config).then(swString => 
