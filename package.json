@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Cloud-CNC/parcel-plugin-workbox.git"
+    "url": "git+https://github.com/Cloud-CNC/parcel-plugin-workbox3.git"
   },
   "keywords": [
     "workbox",
@@ -17,19 +17,22 @@
   "author": "Cloud CNC",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Cloud-CNC/parcel-plugin-workbox/issues"
+    "url": "https://github.com/Cloud-CNC/parcel-plugin-workbox3/issues"
   },
-  "homepage": "https://github.com/Cloud-CNC/parcel-plugin-workbox#readme",
+  "homepage": "https://github.com/Cloud-CNC/parcel-plugin-workbox3#readme",
   "dependencies": {
-    "parcel-bundler": "^1.12.4",
-    "uglify-js": "^3.6.7",
+    "@babel/core": "^7.7.2",
+    "chalk": "^2.4.2",
+    "parcel": "^1.12.4",
+    "parent-module": "^2.0.0",
+    "read-pkg-up": "^7.0.0",
+    "uglify-es": "^3.3.9",
     "workbox-build": "^4.3.1"
   },
   "devDependencies": {
     "eslint": "^6.6.0"
   },
   "peerDependencies": {
-    "parcel": "^1.12.4",
     "workbox-sw": "^4.3.1"
   }
 }

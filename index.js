@@ -4,104 +4,51 @@
  * @author Wakeful Cloud (Refractor)
  */
 
-//Imports
-const bundler = require('parcel-bundler');
+//Modules
 const fs = require('fs');
-const logger = require('@parcel/logger');
+const parent = require('parent-module');
 const path = require('path');
-const uglifyJS = require('uglify-js');
+const pkg = require('read-pkg-up');
+const uglify = require('uglify-es');
 const workbox = require('workbox-build');
 
 module.exports = bundle => 
 {
-  bundle.on('buildEnd', async () => 
+  bundle.on('buildStart', ax => 
   {
-    //Parse config
-    const mainAsset = bundle.mainAsset || bundle.mainBundle.entryAsset || bundle.mainBundle.childBundles.values().next().value.entryAsset;
-    const pkg = typeof mainAsset.getPackage === 'function' ? await mainAsset.getPackage() : mainAsset.package;
-    const config = pkg.workbox;
+    //Get output directory
+    const out = bundle.options.outDir;
 
-    if (config.importScripts == null)
-    {
-      config.importScripts = ['./worker.js'];
-    }
+    //Get parent module config
+    const config = pkg.sync({cwd: path.dirname(parent())}).packageJson.workbox;
 
+    //Glob directory
     if (config.globDirectory == null)
     {
-      config.globDirectory = bundle.options.outDir;
+      config.globDirectory = out;
     }
 
-    if (config.globPatterns == null)
+    //Overwrite import directory
+    config.importScripts = config.importScripts.map(script => `./${path.basename(script)}`);
+
+    //Generate SW
+    workbox.generateSWString(config).then(data =>
     {
-      config.globPatterns = ['**\/*.{css,html,js,gif,ico,jpg,png,svg,webp,woff,woff2,ttf,otf}'];
-    }
+      //Uglify
+      const uglified = process.env.NODE_ENV == 'production' ? uglify.minify(data.swString).code : data.swString;
 
-    const dest = path.resolve(bundle.options.outDir);
-
-    //Add local workbox-sw
-    //config.importScripts.push('node_modules/workbox-sw/index.mjs');
-
-    //Bundle importScripts
-    const scriptsBundle = new bundler(config.importScripts, {
-      outFile: 'worker.js',
-      watch: false,
-      minify: false,
-      bundleNodeModules: true
-    });
-    scriptsBundle.bundle();
-
-    //Import the bundle instead of the scripts
-    config.importScripts = ['./worker.js'];
-
-    //Generate service worker
-    workbox.generateSWString(config).then(swString => 
-    {
-      swString = swString.swString;
-      swString = minify(swString);
-      fs.writeFileSync(path.join(dest, 'sw.js'), swString);
-    }).catch(err => 
-    {
-      logger.error(err);
-    });
-
-    //Get index for injection
-    const entry = path.join(dest, 'index.html');
-
-    //Inject service worker
-    fs.readFile(entry, 'utf8', (err, data) => 
-    {
-      if (err) 
+      //Write to file
+      fs.writeFile(path.join(out, 'sw.js'), uglified, err =>
       {
-        logger.error(err);
-      }
-      else
-      {
-        if (!data.includes('serviceWorker.register')) 
+        if (err)
         {
-          let template = minify(`
-          if ('serviceWorker' in navigator)
-          {
-            window.addEventListener('load', function ()
-            {
-              navigator.serviceWorker.register('/sw.js');
-            });
-          }`);
-          template = `<script>${template}</script></body>`;
-          data = data.replace('</body>', template);
-          fs.writeFileSync(entry, data);
-          logger.success(`Service worker injected into ${dest}/index.html`);
+          throw err;
         }
-      }
+        else
+        {
+          console.log('√  Built service worker!');
+        }
+      });
     });
   });
-
-  /**
-   * Minify raw if specified by Parcel
-   * @param {String} raw Unminified code
-   * @returns {String} Minified code
-   */
-  function minify(raw)
-  {
-    return bundle.options.minify ? uglifyJS.minify(raw) : raw;
-  }
 };
