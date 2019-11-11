@@ -31,24 +31,19 @@ module.exports = bundle =>
     //Overwrite import directory
     config.importScripts = config.importScripts.map(script => `./${path.basename(script)}`);
 
-    //Generate SW
-    workbox.generateSWString(config).then(data =>
-    {
-      //Uglify
-      const uglified = process.env.NODE_ENV == 'production' ? uglify.minify(data.swString).code : data.swString;
+    //Set swDest relative output directory
+    config.swDest = path.join(out, config.swDest);
 
-      //Write to file
-      fs.writeFile(path.join(out, 'sw.js'), uglified, err =>
+    //Generate SW
+    workbox.generateSW(config).then(() =>
+    {
+      //Minify
+      if (process.env.NODE_ENV == 'production')
       {
-        if (err)
-        {
-          throw err;
-        }
-        else
-        {
-          console.log('√  Built service worker!');
-        }
-      });
+        const minfied = uglify.minify(fs.readFileSync(config.swDest, 'utf8')).code;
+        fs.writeFileSync(config.swDest, minfied);
+      }
+      console.log('√  Built service worker!');
     });
   });
 };
