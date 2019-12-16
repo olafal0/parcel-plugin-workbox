@@ -14,7 +14,7 @@ const workbox = require('workbox-build');
 
 module.exports = bundle => 
 {
-  bundle.on('buildStart', ax => 
+  bundle.on('buildStart', () => 
   {
     //Get output directory
     const out = bundle.options.outDir;
