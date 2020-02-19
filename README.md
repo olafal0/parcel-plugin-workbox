@@ -1,7 +1,6 @@
 # Parcel Plugin Workbox 3
 [![issues](https://img.shields.io/github/issues/Cloud-CNC/parcel-plugin-workbox3)](https://github.com/Cloud-CNC/core/issues)
 [![last commit](https://img.shields.io/github/last-commit/Cloud-CNC/parcel-plugin-workbox3)](https://github.com/Cloud-CNC/core/commits/master)
-[![chat](https://img.shields.io/discord/637861853674078218)](https://discord.gg/s7aR5eb)
 
 Fork of [parcel-plugin-workbox](https://github.com/dahnielson/parcel-plugin-workbox) by Anders Dahnielson.
 
