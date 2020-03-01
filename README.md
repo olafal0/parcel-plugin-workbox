@@ -2,6 +2,7 @@
 [![issues](https://img.shields.io/github/issues/Cloud-CNC/parcel-plugin-workbox3)](https://github.com/Cloud-CNC/core/issues)
 [![last commit](https://img.shields.io/github/last-commit/Cloud-CNC/parcel-plugin-workbox3)](https://github.com/Cloud-CNC/core/commits/master)
 
+## THIS PACKAGE IS DEPRECATED AND WILL BE DELETED!
 Fork of [parcel-plugin-workbox](https://github.com/dahnielson/parcel-plugin-workbox) by Anders Dahnielson.
 
 ## Install
@@ -34,13 +35,9 @@ navigator.serviceWorker.register(`./${pkg.workbox.swDest}`);
 ```
 ***Note: importing `package.json` is generally considered insecure***
 
----
-
-If you want to see a fully functioning example, check out [this](https://github.com/Cloud-CNC/core) repository.
-
 ## FAQ
 * Whats different between this and the original?
-  * Still maintained
+  * ~~Still maintained~~
   * Fixed uglify JS
     * [Fixes parcel-plugin-workbox #19](https://github.com/dahnielson/parcel-plugin-workbox/issues/19)
   * Improved configuration support
@@ -49,3 +46,5 @@ If you want to see a fully functioning example, check out [this](https://github.
   * Reduced logging
 * Why not `parcel-plugin-workbox2`?
   * The name was already already taken on [NPM](https://npmjs.com/package/parcel-plugin-workbox2)
+* Why is this deprecated?
+  * The main reason why this was created was for [Cloud CNC](https://github.com/cloud-cnc) which as of February, 2020 is no longer using Parcel. I don't use Parcel on any other projects as of now so I decided to deprecate this package as I don't have time to maintain it.
