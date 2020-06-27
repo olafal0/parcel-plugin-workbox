@@ -73,7 +73,6 @@ module.exports = (bundle) => {
       `;
       if (bundle.options.minify) {
         swTag = uglify.minify(swTag);
-        console.log(swTag);
         swTag = `<script>${swTag.code}</script></body>`;
       } else {
         swTag = `
@@ -84,7 +83,9 @@ module.exports = (bundle) => {
       }
       data = data.replace('</body>', swTag);
       fs.writeFileSync(entry, data);
-      console.log(`Service worker injected into ${config.swDest}/index.html`);
+      console.log(
+        `✔️ Service worker injected into ${config.swDest}/index.html`
+      );
     }
   });
 };
