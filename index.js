@@ -14,7 +14,7 @@ const uglify = require('uglify-es');
 const workbox = require('workbox-build');
 
 module.exports = (bundle) => {
-  bundle.on('buildStart', () => {
+  bundle.on('buildEnd', () => {
     //Get output directory
     const out = bundle.options.outDir;
 
@@ -30,10 +30,12 @@ module.exports = (bundle) => {
       ],
     };
 
+    const pkgConfig = pkg.sync({ cwd: path.dirname(parent()) }).packageJson;
+
     //Get parent module config
     const config = {
       ...defaultConfig,
-      ...pkg.sync({ cwd: path.dirname(parent()) }).packageJson.workbox,
+      ...pkgConfig.workbox,
     };
 
     //Overwrite import directory
@@ -47,12 +49,42 @@ module.exports = (bundle) => {
     //Generate SW
     workbox.generateSW(config).then(() => {
       //Minify
-      if (process.env.NODE_ENV == 'production') {
+      if (process.env.NODE_ENV === 'production') {
         const minfied = uglify.minify(fs.readFileSync(config.swDest, 'utf8'))
           .code;
         fs.writeFileSync(config.swDest, minfied);
       }
-      console.log('√  Built service worker!');
+      console.log(`✔️  Built service worker as ${config.swDest}`);
     });
+
+    // Inject service worker into Parcel entrypoint
+    // If this is not injected on buildEnd, Parcel will look for the service
+    // worker file before it exists
+    // TODO: remove hardcoded entry point, get directly from Parcel?
+    const entry = path.resolve(out, 'index.html');
+    let data = fs.readFileSync(entry, 'utf8');
+    if (!data.includes('serviceWorker.register')) {
+      let swTag = `
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js');
+          });
+        }
+      `;
+      if (bundle.options.minify) {
+        swTag = uglify.minify(swTag);
+        console.log(swTag);
+        swTag = `<script>${swTag.code}</script></body>`;
+      } else {
+        swTag = `
+        <script>
+        ${swTag}
+        </script>
+      </body>`;
+      }
+      data = data.replace('</body>', swTag);
+      fs.writeFileSync(entry, data);
+      console.log(`Service worker injected into ${config.swDest}/index.html`);
+    }
   });
 };
