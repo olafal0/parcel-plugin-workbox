@@ -1,6 +1,6 @@
 {
   "name": "parcel-plugin-workbox3",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Parcel plugin to generate a workbox service worker",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Cloud-CNC/parcel-plugin-workbox3.git"
+    "url": "git+https://github.com/olafal0/parcel-plugin-workbox3.git"
   },
   "keywords": [
     "workbox",
@@ -17,9 +17,9 @@
   "author": "Cloud CNC",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Cloud-CNC/parcel-plugin-workbox3/issues"
+    "url": "https://github.com/olafal0/parcel-plugin-workbox3/issues"
   },
-  "homepage": "https://github.com/Cloud-CNC/parcel-plugin-workbox3#readme",
+  "homepage": "https://github.com/olafal0/parcel-plugin-workbox3#readme",
   "dependencies": {
     "parent-module": "^2.0.0",
     "read-pkg-up": "^7.0.0",
