@@ -7,9 +7,7 @@
 
 //Modules
 const fs = require('fs');
-const parent = require('parent-module');
 const path = require('path');
-const pkg = require('read-pkg-up');
 const uglify = require('uglify-es');
 const workbox = require('workbox-build');
 
@@ -30,7 +28,8 @@ module.exports = (bundle) => {
       ],
     };
 
-    const pkgConfig = pkg.sync({ cwd: path.dirname(parent()) }).packageJson;
+    const pkgPath = path.resolve(process.cwd(), 'package.json');
+    const pkgConfig = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
     //Get parent module config
     const config = {
@@ -54,13 +53,14 @@ module.exports = (bundle) => {
           .code;
         fs.writeFileSync(config.swDest, minfied);
       }
-      console.log(`✔️  Built service worker as ${config.swDest}`);
+      console.log(`✔️ Built service worker as ${config.swDest}`);
     });
 
     // Inject service worker into Parcel entrypoint
     // If this is not injected on buildEnd, Parcel will look for the service
     // worker file before it exists
-    // TODO: remove hardcoded entry point, get directly from Parcel?
+    // TODO: remove hardcoded entry point, get directly from Parcel? Can use
+    // bundle.entryAsset
     const entry = path.resolve(out, 'index.html');
     let data = fs.readFileSync(entry, 'utf8');
     if (!data.includes('serviceWorker.register')) {

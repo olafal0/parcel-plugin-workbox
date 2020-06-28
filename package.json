@@ -1,6 +1,6 @@
 {
-  "name": "parcel-plugin-workbox3",
-  "version": "1.3.0",
+  "name": "@olafalo/parcel-plugin-workbox",
+  "version": "1.4.2",
   "description": "Parcel plugin to generate a workbox service worker",
   "main": "index.js",
   "scripts": {
@@ -8,21 +8,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/olafal0/parcel-plugin-workbox3.git"
+    "url": "git+https://github.com/olafal0/parcel-plugin-workbox.git"
   },
   "keywords": [
     "workbox",
-    "parcel"
+    "parcel",
+    "plugin",
+    "service worker",
+    "pwa",
+    "cache",
+    "caching"
   ],
-  "author": "Cloud CNC",
+  "author": "olafal0",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/olafal0/parcel-plugin-workbox3/issues"
+    "url": "https://github.com/olafal0/parcel-plugin-workbox/issues"
   },
-  "homepage": "https://github.com/olafal0/parcel-plugin-workbox3#readme",
+  "homepage": "https://github.com/olafal0/parcel-plugin-workbox#readme",
   "dependencies": {
-    "parent-module": "^2.0.0",
-    "read-pkg-up": "^7.0.0",
     "uglify-es": "^3.3.9",
     "workbox-build": "^4.3.1"
   },
